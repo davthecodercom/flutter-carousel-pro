@@ -4,7 +4,7 @@ import 'dart:async';
 
 class WidgetCarousel extends StatefulWidget {
   //All the pages on this Carousel.
-  final List pages;
+  final List? pages;
 
   //The transition animation timing curve. Default is [Curves.ease]
   final Curve animationCurve;
@@ -25,7 +25,7 @@ class WidgetCarousel extends StatefulWidget {
   final Color dotColor;
 
   // The background Color of the dots. Default is [Colors.grey[800].withOpacity(0.5)]
-  final Color dotBgColor;
+  final Color? dotBgColor;
 
   // Enable or Disable the indicator (dots). Default is true
   final bool showIndicator;
@@ -40,7 +40,7 @@ class WidgetCarousel extends StatefulWidget {
   final bool borderRadius;
 
   //Border Radius of the images. Default is [Radius.circular(8.0)]
-  final Radius radius;
+  final Radius? radius;
 
   //Move the Indicator From the Bottom
   final double moveIndicatorFromBottom;
@@ -52,7 +52,7 @@ class WidgetCarousel extends StatefulWidget {
   final bool overlayShadow;
 
   //Choose the color of the overlay Shadow color. Default Colors.grey[800]
-  final Color overlayShadowColors;
+  final Color? overlayShadowColors;
 
   //Choose the size of the Overlay Shadow, from 0.0 to 1.0. Default 0.5
   final double overlayShadowSize;
@@ -84,13 +84,7 @@ class WidgetCarousel extends StatefulWidget {
       this.overlayShadowSize = 0.5,
       this.autoplay = true,
       this.autoplayDuration = const Duration(seconds: 3)})
-      : assert(pages != null),
-        assert(animationCurve != null),
-        assert(animationDuration != null),
-        assert(dotSize != null),
-        assert(dotSpacing != null),
-        assert(dotIncreaseSize != null),
-        assert(dotColor != null);
+      : assert(pages != null);
 
   @override
   State createState() => WidgetCarouselState();
@@ -105,7 +99,7 @@ class WidgetCarouselState extends State<WidgetCarousel> {
 
     if (widget.autoplay) {
       Timer.periodic(widget.autoplayDuration, (_) {
-        if (_controller.page == widget.pages.length - 1) {
+        if (_controller.page == widget.pages!.length - 1) {
           _controller.animateToPage(
             0,
             duration: widget.animationDuration,
@@ -126,7 +120,7 @@ class WidgetCarouselState extends State<WidgetCarousel> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> listPages = widget.pages
+    final List<Widget> listPages = widget.pages!
         .map((widget) => Container(
               child: widget,
             ))
@@ -149,18 +143,16 @@ class WidgetCarouselState extends State<WidgetCarousel> {
                 child: Container(
                   decoration: BoxDecoration(
                     color: widget.dotBgColor == null
-                        ? Colors.grey[800].withOpacity(0.5)
+                        ? Colors.grey[800]!.withOpacity(0.5)
                         : widget.dotBgColor,
                     borderRadius: widget.borderRadius
                         ? (widget.noRadiusForIndicator
                             ? null
                             : BorderRadius.only(
-                                bottomLeft: widget.radius != null
-                                    ? widget.radius
-                                    : Radius.circular(8.0),
-                                bottomRight: widget.radius != null
-                                    ? widget.radius
-                                    : Radius.circular(8.0)))
+                                bottomLeft:
+                                    widget.radius ?? Radius.circular(8.0),
+                                bottomRight:
+                                    widget.radius ?? Radius.circular(8.0)))
                         : null,
                   ),
                   padding: EdgeInsets.all(widget.indicatorBgPadding),
@@ -192,13 +184,13 @@ class WidgetCarouselState extends State<WidgetCarousel> {
 /// An indicator showing the currently selected page of a PageController
 class DotsIndicator extends AnimatedWidget {
   DotsIndicator(
-      {this.controller,
-      this.itemCount,
-      this.onPageSelected,
-      this.color,
-      this.dotSize,
-      this.dotIncreaseSize,
-      this.dotSpacing})
+      {required this.controller,
+      required this.itemCount,
+      required this.onPageSelected,
+      required this.color,
+      required this.dotSize,
+      required this.dotIncreaseSize,
+      required this.dotSpacing})
       : super(listenable: controller);
 
   // The PageController that this DotsIndicator is representing.
